@@ -2,6 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
+import 'antd/dist/antd.less';
+import 'styles/base.less';
+import 'styles/helpers.less';
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

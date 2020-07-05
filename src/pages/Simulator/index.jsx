@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Form, Input, Button, Typography, Select, Row, Col } from 'antd';
+import { Form, Button, Typography, Select, Row, Col } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 import Wrapper from 'pages/wrapper';
@@ -40,11 +40,26 @@ const Simulator = () => {
     setStepsList((state) => [
       ...state,
       {
+        id: !state.length ? 1 : state[state.length - 1].id + 1,
         category: undefined,
       },
     ]);
     add();
   }, []);
+
+  const renderSelect = useCallback(
+    (placeholder) => (
+      <Select placeholder={placeholder}>
+        <Option value="stop">Parada</Option>
+        {stepsList.map((step, index) => (
+          <Option key={step.id} value={step.id}>
+            {index + 1}
+          </Option>
+        ))}
+      </Select>
+    ),
+    [stepsList]
+  );
 
   return (
     <Wrapper>
@@ -63,7 +78,14 @@ const Simulator = () => {
                 <>
                   {fields.map((field, index) => (
                     <Row key={field.key} align="middle">
-                      <Col span={1} className="flex end">
+                      <Col span={1} className="flex center">
+                        <MinusCircleOutlined
+                          className="remove-btn"
+                          onClick={() => handleRemoveItem(remove, field.name)}
+                        />
+                      </Col>
+
+                      <Col span={1} className="flex center">
                         <Text strong>{index + 1}:</Text>
                       </Col>
 
@@ -94,7 +116,7 @@ const Simulator = () => {
                               name={[field.name, 'caseTrue']}
                               fieldKey={[field.fieldKey, 'caseTrue']}
                             >
-                              <Input placeholder="Caso verdadeiro" />
+                              {renderSelect('Caso verdadeiro')}
                             </Form.Item>
                           </Col>
                           <Col span={4}>
@@ -104,7 +126,7 @@ const Simulator = () => {
                               name={[field.name, 'caseFalse']}
                               fieldKey={[field.fieldKey, 'caseFalse']}
                             >
-                              <Input placeholder="Caso falso" />
+                              {renderSelect('Caso falso')}
                             </Form.Item>
                           </Col>
                         </>
@@ -117,17 +139,10 @@ const Simulator = () => {
                             name={[field.name, 'goTo']}
                             fieldKey={[field.fieldKey, 'goTo']}
                           >
-                            <Input placeholder="Ir para" />
+                            {renderSelect('Ir para')}
                           </Form.Item>
                         </Col>
                       )}
-
-                      <Col span={1}>
-                        <MinusCircleOutlined
-                          className="remove-btn"
-                          onClick={() => handleRemoveItem(remove, field.name)}
-                        />
-                      </Col>
                     </Row>
                   ))}
 

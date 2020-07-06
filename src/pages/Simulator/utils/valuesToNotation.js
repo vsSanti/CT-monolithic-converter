@@ -1,41 +1,32 @@
 import transformSteps from './transformSteps';
 
+const createCase = (step, transformedSteps, caseBoolean = '') => {
+  let newObject = {};
+  if (step[caseBoolean] === 'stop') {
+    newObject = {
+      label: 'parada',
+      goTo: 'e',
+    };
+  }
+
+  return {
+    label:
+      step.category === 'operation'
+        ? step.label
+        : transformedSteps[step[caseBoolean]]?.label,
+    goTo: step[caseBoolean] + 1,
+    ...newObject,
+  };
+};
+
 const valuesToNotation = ({ steps = [] }) => {
   const transformedSteps = transformSteps(steps);
 
   const stack = [];
   transformedSteps.forEach((step) => {
-    const newObject = {};
-    if (step.caseTrue === 'stop') {
-      newObject.caseTrue = {
-        label: 'parada',
-        goTo: 'e',
-      };
-    }
-
-    if (step.caseFalse === 'step') {
-      newObject.caseFalse = {
-        label: 'parada',
-        goTo: 'e',
-      };
-    }
-
     stack.push({
-      caseTrue: {
-        label:
-          step.category === 'operation'
-            ? step.label
-            : transformedSteps[step.caseTrue]?.label,
-        goTo: step.caseTrue + 1,
-      },
-      caseFalse: {
-        label:
-          step.category === 'operation'
-            ? step.label
-            : transformedSteps[step.caseFalse]?.label,
-        goTo: step.caseFalse + 1,
-      },
-      ...newObject,
+      caseTrue: createCase(step, transformedSteps, 'caseTrue'),
+      caseFalse: createCase(step, transformedSteps, 'caseFalse'),
     });
   });
 

@@ -1,23 +1,43 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Form, Button, Typography, Select, Row, Col } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 import Wrapper from 'pages/wrapper';
 
 import './styles.less';
+import valuesToNotation from './utils/valuesToNotation';
 
 const { Option } = Select;
 const { Title, Paragraph, Text } = Typography;
 
+const exampleValue = {
+  steps: [
+    {
+      category: 'operation',
+      goTo: 1,
+    },
+    {
+      category: 'test',
+      caseTrue: 0,
+      caseFalse: 2,
+    },
+    {
+      category: 'operation',
+      goTo: 3,
+    },
+    {
+      category: 'test',
+      caseTrue: 'stop',
+      caseFalse: 0,
+    },
+  ],
+};
+
 const Simulator = () => {
   const [stepsList, setStepsList] = useState([]);
 
-  useEffect(() => {
-    console.log(stepsList);
-  }, [stepsList]);
-
   const onFinish = useCallback((values) => {
-    console.log('Received values of form:', values);
+    console.log(values);
   }, []);
 
   const handleOnSelectChange = useCallback((value, fieldName) => {
@@ -52,7 +72,7 @@ const Simulator = () => {
       <Select placeholder={placeholder}>
         <Option value="stop">Parada</Option>
         {stepsList.map((step, index) => (
-          <Option key={step.id} value={step.id}>
+          <Option key={step.id} value={index}>
             {index + 1}
           </Option>
         ))}
@@ -167,6 +187,14 @@ const Simulator = () => {
             disabled={!stepsList.length}
           >
             Converter
+          </Button>
+          <Button
+            type="primary"
+            className="mrg-top-15"
+            block
+            onClick={() => valuesToNotation(exampleValue)}
+          >
+            Calcular
           </Button>
         </Form>
       </div>

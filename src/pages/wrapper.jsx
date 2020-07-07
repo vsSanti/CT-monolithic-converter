@@ -1,26 +1,20 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Breadcrumb, Typography } from 'antd';
 
 import './styles.less';
 
 const { Header, Content } = Layout;
-
+const { Text } = Typography;
 const Wrapper = ({ children }) => {
   return (
     <Layout id="wrapper-component" className="layout">
       <Header>
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal">
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item>
-        </Menu>
+        <Text className="header-text">Desenvolvido por Lucas, Guilherme e Vinícius</Text>
       </Header>
       <Content style={{ padding: '0 50px' }}>
         <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
+          <Breadcrumb.Item>Simulação</Breadcrumb.Item>
+          <Breadcrumb.Item>Criar</Breadcrumb.Item>
         </Breadcrumb>
         <div className="site-layout-content">{children}</div>
       </Content>

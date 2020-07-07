@@ -1,44 +1,33 @@
 import React, { useCallback, useState } from 'react';
 import { Form, Button, Typography, Select, Row, Col } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import Flowchart from 'react-simple-flowchart';
 
 import Wrapper from 'pages/wrapper';
 
-import './styles.less';
+import Notation from './components/Notation';
+import Flowchart from './components/Flowchart';
 import valuesToNotation from './utils/valuesToNotation';
+import './styles.less';
+
+import tests from './utils/tests';
 
 const { Option } = Select;
 const { Title, Paragraph, Text } = Typography;
 
-const options = {
-  x: 0,
-  y: 0,
-  'line-width': 3,
-  'line-length': 50,
-  'text-margin': 10,
-  'font-size': 14,
-  'font-color': 'black',
-  'line-color': 'black',
-  'element-color': 'black',
-  fill: 'white',
-  'yes-text': 'V',
-  'no-text': 'F',
-  'arrow-end': 'block',
-  scale: 1,
-};
-
 const Simulator = () => {
   const [stepsList, setStepsList] = useState([]);
-  const [code, setCode] = useState(`
+  const [stepsInNotation, setStepsInNotation] = useState([]);
+  const [code] = useState(`
     st=>start: Begin
     e=>end: End
     st->e
   `);
 
   const onFinish = useCallback((values) => {
+    console.log(tests);
     console.log(values);
-    valuesToNotation(values);
+    const steps = valuesToNotation(values);
+    setStepsInNotation(steps);
   }, []);
 
   const handleOnSelectChange = useCallback((value, fieldName) => {
@@ -82,18 +71,18 @@ const Simulator = () => {
     [stepsList]
   );
 
-  const renderFlowchartCode = () => {
-    const newCode = `st=>start: Begin
-    e=>end: End
-    op1=>operation: Operation 1|department1
-    op2=>operation: Operation 2|department2
-    sub=>subroutine: Go To Google|external:>http://www.google.com
-    cond=>condition: Google?
-    st(right)->op1(right)->op2(right)->cond(yes)->sub(bottom)
-    cond(no)->e`;
+  // const renderFlowchartCode = () => {
+  //   const newCode = `st=>start: Begin
+  //   e=>end: End
+  //   op1=>operation: Operation 1|department1
+  //   op2=>operation: Operation 2|department2
+  //   sub=>subroutine: Go To Google|external:>http://www.google.com
+  //   cond=>condition: Google?
+  //   st(right)->op1(right)->op2(right)->cond(yes)->sub(bottom)
+  //   cond(no)->e`;
 
-    setCode(newCode);
-  };
+  //   setCode(newCode);
+  // };
 
   return (
     <Wrapper>
@@ -202,25 +191,18 @@ const Simulator = () => {
           >
             Converter
           </Button>
-          <Button
-            type="primary"
-            className="mrg-top-15"
-            block
-            onClick={() => {
-              renderFlowchartCode();
-            }}
-          >
-            Calcular
-          </Button>
         </Form>
       </div>
-      <div>
-        <Flowchart
-          chartCode={code}
-          options={options}
-          // onClick={(elementText) => this.setState({ elementText })}
-        />
-      </div>
+      {stepsInNotation.length > 0 && (
+        <Row className="mrg-top-25">
+          <Col span={8}>
+            <Notation stepsInNotation={stepsInNotation} />
+          </Col>
+          <Col span={16}>
+            <Flowchart code={code} />
+          </Col>
+        </Row>
+      )}
     </Wrapper>
   );
 };

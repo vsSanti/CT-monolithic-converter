@@ -31,7 +31,7 @@ module.exports = {
     "no-underscore-dangle": "off",
     "camelcase": "off",
     "react/jsx-props-no-spreading": "off",
-    "react/prop-types": [1, { ignore: ['children'] } ],
+    "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "no-alert": "off",
     "react-hooks/exhaustive-deps": "warn",

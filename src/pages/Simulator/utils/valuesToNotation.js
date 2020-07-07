@@ -5,7 +5,7 @@ import transformSteps from './transformSteps';
 const createCase = (step, transformedSteps, caseBoolean = '') => {
   let newObject;
 
-  if (step[caseBoolean] === 'stop') {
+  if (String(step[caseBoolean]).includes('stop')) {
     newObject = {
       label: 'parada',
       goTo: 'e',
@@ -14,26 +14,29 @@ const createCase = (step, transformedSteps, caseBoolean = '') => {
 
   if (step.category === 'test' && !newObject) {
     let nextStep = transformedSteps[step[caseBoolean]];
-    let cont = 0;
+    let controlCont = 0;
 
-    if (nextStep?.category === 'test') cont = 1;
-
-    while (nextStep?.category === 'test' && nextStep[caseBoolean] !== 'stop') {
+    while (
+      nextStep?.category === 'test' &&
+      nextStep[caseBoolean] !== 'stop' &&
+      controlCont < 100
+    ) {
       if (lodash.isEqual(step, nextStep)) {
         break;
       }
       nextStep = transformedSteps[nextStep[caseBoolean]];
+      controlCont += 1;
     }
 
-    if (lodash.isEqual(step, nextStep)) {
+    if (lodash.isEqual(step, nextStep) || controlCont === 100) {
       newObject = {
         label: 'ciclo',
         goTo: 'w',
       };
-    } else {
+    } else if (nextStep[caseBoolean] === 'stop' || nextStep?.category === 'operation') {
       newObject = {
         label: nextStep?.label,
-        goTo: nextStep[caseBoolean] + cont,
+        goTo: nextStep?.id + 1,
       };
     }
   }
@@ -52,17 +55,23 @@ const createCase = (step, transformedSteps, caseBoolean = '') => {
 
 const valuesToNotation = ({ steps = [] }) => {
   const transformedSteps = transformSteps(steps);
-  console.log({ steps, transformedSteps });
+  // console.log({ steps, transformedSteps });
 
-  const stack = [];
+  let stack = [];
   transformedSteps.forEach((step) => {
-    stack.push({
-      caseTrue: createCase(step, transformedSteps, 'caseTrue'),
-      caseFalse: createCase(step, transformedSteps, 'caseFalse'),
-    });
+    stack = [
+      ...stack,
+      {
+        caseTrue: createCase(step, transformedSteps, 'caseTrue'),
+        caseFalse: createCase(step, transformedSteps, 'caseFalse'),
+      },
+    ];
   });
 
-  console.log(lodash.uniqWith(stack, lodash.isEqual));
+  const uniqueSteps = lodash.uniqWith(stack, lodash.isEqual);
+  console.log(uniqueSteps);
+
+  return uniqueSteps;
 };
 
 export default valuesToNotation;

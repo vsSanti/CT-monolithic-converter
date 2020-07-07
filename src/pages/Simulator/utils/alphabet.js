@@ -1,3 +1,3 @@
-const alphabet = [...'abcdefghijklmnopqrstuvwxyz'.toUpperCase()];
+const alphabet = [...'fghijklmnopqrstuvwxyzabcde'.toUpperCase()];
 
 export default alphabet;

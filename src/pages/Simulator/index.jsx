@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Form, Button, Typography, Select, Row, Col } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import Flowchart from 'react-simple-flowchart';
 
 import Wrapper from 'pages/wrapper';
 
@@ -33,8 +34,47 @@ const exampleValue = {
   ],
 };
 
+const options = {
+  x: 0,
+  y: 0,
+  'line-width': 3,
+  'line-length': 50,
+  'text-margin': 10,
+  'font-size': 14,
+  'font-color': 'black',
+  'line-color': 'black',
+  'element-color': 'black',
+  fill: 'white',
+  'yes-text': 'yes',
+  'no-text': 'no',
+  'arrow-end': 'block',
+  scale: 1,
+  symbols: {
+    start: {
+      'font-color': 'red',
+      'element-color': 'green',
+      'font-weight': 'bold',
+    },
+    end: {
+      'font-color': 'red',
+      'element-color': 'green',
+      'font-weight': 'bold',
+    },
+  },
+  flowstate: {
+    department1: { fill: 'pink' },
+    department2: { fill: 'yellow' },
+    external: { fill: 'green' },
+  },
+};
+
 const Simulator = () => {
   const [stepsList, setStepsList] = useState([]);
+  const [code, setCode] = useState(`
+    st=>start: Begin
+    e=>end: End
+    st->e
+  `);
 
   const onFinish = useCallback((values) => {
     console.log(values);
@@ -80,6 +120,19 @@ const Simulator = () => {
     ),
     [stepsList]
   );
+
+  const renderFlowchartCode = () => {
+    const newCode = `st=>start: Begin
+    e=>end: End
+    op1=>operation: Operation 1|department1
+    op2=>operation: Operation 2|department2
+    sub=>subroutine: Go To Google|external:>http://www.google.com
+    cond=>condition: Google?
+    st(right)->op1(right)->op2(right)->cond(yes)->sub(bottom)
+    cond(no)->e`;
+
+    setCode(newCode);
+  };
 
   return (
     <Wrapper>
@@ -192,11 +245,21 @@ const Simulator = () => {
             type="primary"
             className="mrg-top-15"
             block
-            onClick={() => valuesToNotation(exampleValue)}
+            onClick={() => {
+              renderFlowchartCode();
+              valuesToNotation(exampleValue);
+            }}
           >
             Calcular
           </Button>
         </Form>
+      </div>
+      <div>
+        <Flowchart
+          chartCode={code}
+          options={options}
+          // onClick={(elementText) => this.setState({ elementText })}
+        />
       </div>
     </Wrapper>
   );

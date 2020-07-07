@@ -11,29 +11,6 @@ import valuesToNotation from './utils/valuesToNotation';
 const { Option } = Select;
 const { Title, Paragraph, Text } = Typography;
 
-const exampleValue = {
-  steps: [
-    {
-      category: 'operation',
-      goTo: 1,
-    },
-    {
-      category: 'test',
-      caseTrue: 0,
-      caseFalse: 2,
-    },
-    {
-      category: 'operation',
-      goTo: 3,
-    },
-    {
-      category: 'test',
-      caseTrue: 'stop',
-      caseFalse: 0,
-    },
-  ],
-};
-
 const options = {
   x: 0,
   y: 0,
@@ -45,27 +22,10 @@ const options = {
   'line-color': 'black',
   'element-color': 'black',
   fill: 'white',
-  'yes-text': 'yes',
-  'no-text': 'no',
+  'yes-text': 'V',
+  'no-text': 'F',
   'arrow-end': 'block',
   scale: 1,
-  symbols: {
-    start: {
-      'font-color': 'red',
-      'element-color': 'green',
-      'font-weight': 'bold',
-    },
-    end: {
-      'font-color': 'red',
-      'element-color': 'green',
-      'font-weight': 'bold',
-    },
-  },
-  flowstate: {
-    department1: { fill: 'pink' },
-    department2: { fill: 'yellow' },
-    external: { fill: 'green' },
-  },
 };
 
 const Simulator = () => {
@@ -78,6 +38,7 @@ const Simulator = () => {
 
   const onFinish = useCallback((values) => {
     console.log(values);
+    valuesToNotation(values);
   }, []);
 
   const handleOnSelectChange = useCallback((value, fieldName) => {
@@ -237,7 +198,7 @@ const Simulator = () => {
             htmlType="submit"
             className="mrg-top-15"
             block
-            disabled={!stepsList.length}
+            // disabled={!stepsList.length}
           >
             Converter
           </Button>
@@ -247,7 +208,6 @@ const Simulator = () => {
             block
             onClick={() => {
               renderFlowchartCode();
-              valuesToNotation(exampleValue);
             }}
           >
             Calcular

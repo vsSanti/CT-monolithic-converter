@@ -7,9 +7,11 @@ import Wrapper from 'pages/wrapper';
 import Notation from './components/Notation';
 import Flowchart from './components/Flowchart';
 import valuesToNotation from './utils/valuesToNotation';
+import valuesToFlowchart from './utils/valuesToFlowchart';
+
 import './styles.less';
 
-import tests from './utils/tests';
+// import tests from './utils/tests';
 
 const { Option } = Select;
 const { Title, Paragraph, Text } = Typography;
@@ -17,17 +19,22 @@ const { Title, Paragraph, Text } = Typography;
 const Simulator = () => {
   const [stepsList, setStepsList] = useState([]);
   const [stepsInNotation, setStepsInNotation] = useState([]);
-  const [code] = useState(`
-    st=>start: Begin
-    e=>end: End
+  const [code, setCode] = useState(`
+    st=>start: Partida
+    e=>end: Parada
+
     st->e
   `);
 
   const onFinish = useCallback((values) => {
-    console.log(tests);
-    console.log(values);
+    // console.log(tests);
+    // console.log(values);
+
     const steps = valuesToNotation(values);
     setStepsInNotation(steps);
+
+    const flow = valuesToFlowchart(values);
+    setCode(flow);
   }, []);
 
   const handleOnSelectChange = useCallback((value, fieldName) => {
@@ -70,19 +77,6 @@ const Simulator = () => {
     ),
     [stepsList]
   );
-
-  // const renderFlowchartCode = () => {
-  //   const newCode = `st=>start: Begin
-  //   e=>end: End
-  //   op1=>operation: Operation 1|department1
-  //   op2=>operation: Operation 2|department2
-  //   sub=>subroutine: Go To Google|external:>http://www.google.com
-  //   cond=>condition: Google?
-  //   st(right)->op1(right)->op2(right)->cond(yes)->sub(bottom)
-  //   cond(no)->e`;
-
-  //   setCode(newCode);
-  // };
 
   return (
     <Wrapper>

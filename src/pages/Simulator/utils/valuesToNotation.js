@@ -69,7 +69,7 @@ const valuesToNotation = ({ steps = [] }) => {
   });
 
   const uniqueSteps = lodash.uniqWith(stack, lodash.isEqual);
-  console.log(uniqueSteps);
+  // console.log(uniqueSteps);
 
   return uniqueSteps;
 };
